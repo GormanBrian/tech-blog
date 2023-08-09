@@ -16,11 +16,18 @@ Comment.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    author_name: {
-      type: DataTypes.STRING,
+    author_id: {
+      type: DataTypes.UUID,
       references: {
         model: "user",
-        key: "name",
+        key: "id",
+      },
+    },
+    blog_post_id: {
+      type: DataTypes.UUID,
+      references: {
+        model: "blog_post",
+        key: "id",
       },
     },
   },
