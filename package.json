@@ -1,0 +1,23 @@
+{
+  "name": "tech-blog",
+  "version": "1.0.0",
+  "description": "CMS-style blog site",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "start:watch": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:GormanBrian/tech-blog.git"
+  },
+  "keywords": [
+    "Blog",
+    "Tech",
+    "CMS",
+    "Review"
+  ],
+  "author": "Brian Gorman",
+  "license": "ISC"
+}
