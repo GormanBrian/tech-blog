@@ -1,12 +1,12 @@
 const express = require("express");
 
 // Import auth middleware
-const withAuth = require("../../utils/auth");
+const withAuth = require("../utils/auth");
 
 // Import sequelize models
-const BlogPost = require("../../models/BlogPost");
-const Comment = require("../../models/Comment");
-const User = require("../../models/User");
+const BlogPost = require("../models/BlogPost");
+const Comment = require("../models/Comment");
+const User = require("../models/User");
 
 /**
  * Express router to mount {@linkcode BlogPost} related functions on.
@@ -16,7 +16,7 @@ const User = require("../../models/User");
 const router = express.Router();
 
 // Render the dashboard view with all BlogPost titles and timestamps
-router.get("/dashboard", withAuth, async (_, res) => {
+router.get("/", withAuth, async (_, res) => {
   try {
     const blogPosts = await BlogPost.findAll({
       attributes: ["title", "created_at"],
@@ -48,7 +48,7 @@ const includeUsername = {
 };
 
 // Render the blogpost view with a BlogPost found by ID
-router.get("/:id", withAuth, async (req, res) => {
+router.get("/blogposts/:id", withAuth, async (req, res) => {
   try {
     const blogPost = await BlogPost.findByPk(req.params.id, {
       attributes,
@@ -66,6 +66,11 @@ router.get("/:id", withAuth, async (req, res) => {
     console.error(err);
     res.status(500).json(err);
   }
+});
+
+// Render the login page or redirect to the dashboard if already logged in
+router.get("/login", (req, res) => {
+  req.session.loggedIn ? res.redirect("/") : res.render("login");
 });
 
 module.exports = router;
