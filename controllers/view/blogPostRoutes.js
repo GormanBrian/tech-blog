@@ -15,6 +15,19 @@ const User = require("../../models/User");
  */
 const router = express.Router();
 
+// Render the dashboard view with all BlogPost titles and timestamps
+router.get("/dashboard", withAuth, async (_, res) => {
+  try {
+    const blogPosts = await BlogPost.findAll({
+      attributes: ["title", "created_at"],
+    }).get({ plain: true });
+    res.render("dashboard", { blogPosts });
+  } catch (err) {
+    console.error(err);
+    res.send(500).json(err);
+  }
+});
+
 /**
  * Common BlogPost attributes
  * @type {Array<string>}
@@ -34,7 +47,7 @@ const includeUsername = {
   attributes: ["username"],
 };
 
-// Get BlogPost by ID
+// Render the blogpost view with a BlogPost found by ID
 router.get("/:id", withAuth, async (req, res) => {
   try {
     const blogPost = await BlogPost.findByPk(req.params.id, {
