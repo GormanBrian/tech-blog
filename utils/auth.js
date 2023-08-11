@@ -10,7 +10,8 @@ const e = require("express");
  * @returns {void}
  */
 const withAuth = (req, res, next) => {
-  req.session.logged_in ? next() : res.redirect("/login");
+  if (req.session.logged_in) next();
+  else res.redirect("/login");
 };
 
 module.exports = withAuth;

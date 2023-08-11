@@ -4,6 +4,7 @@ const express = require("express");
 const withAuth = require("../utils/auth");
 
 // Import sequelize models
+const { BlogPost, Comment, User } = require("../models/");
 const BlogPost = require("../models/BlogPost");
 const Comment = require("../models/Comment");
 const User = require("../models/User");
@@ -15,16 +16,29 @@ const User = require("../models/User");
  */
 const router = express.Router();
 
-// Render the dashboard view with all BlogPost titles and timestamps
-router.get("/", withAuth, async (_, res) => {
+router.get("/", async (req, res) => {
   try {
     const blogPosts = await BlogPost.findAll({
       attributes: ["title", "created_at"],
     }).get({ plain: true });
+
+    res.render("homepage", { blogPosts });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json(err);
+  }
+});
+
+// Render the dashboard view with all BlogPost titles and timestamps
+router.get("/dashboard", withAuth, async (_, res) => {
+  try {
+    const blogPosts = await BlogPost.findAll({
+      attributes: ["title", "created_at", "content"],
+    }).get({ plain: true });
     res.render("dashboard", { blogPosts });
   } catch (err) {
     console.error(err);
-    res.send(500).json(err);
+    res.status(500).json(err);
   }
 });
 
