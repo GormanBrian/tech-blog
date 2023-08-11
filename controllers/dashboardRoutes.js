@@ -5,9 +5,6 @@ const withAuth = require("../utils/auth");
 
 // Import sequelize models
 const { BlogPost, Comment, User } = require("../models/");
-const BlogPost = require("../models/BlogPost");
-const Comment = require("../models/Comment");
-const User = require("../models/User");
 
 /**
  * Express router to mount {@linkcode BlogPost} related functions on.
@@ -16,11 +13,13 @@ const User = require("../models/User");
  */
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.get("/", withAuth, async (req, res) => {
   try {
-    const blogPosts = await BlogPost.findAll({
-      attributes: ["title", "created_at"],
-    }).get({ plain: true });
+    const blogPostsData = await BlogPost.findAll({
+      attributes: ["title", "createdAt"],
+    });
+
+    const blogPosts = blogPostsData.map((post) => post.get({ plain: true }));
 
     res.render("homepage", { blogPosts });
   } catch (err) {
@@ -32,14 +31,21 @@ router.get("/", async (req, res) => {
 // Render the dashboard view with all BlogPost titles and timestamps
 router.get("/dashboard", withAuth, async (_, res) => {
   try {
-    const blogPosts = await BlogPost.findAll({
-      attributes: ["title", "created_at", "content"],
-    }).get({ plain: true });
+    const blogPostsData = await BlogPost.findAll({
+      attributes: ["title", "createdAt", "content"],
+    });
+
+    const blogPosts = blogPostsData.map((post) => post.get({ plain: true }));
+
     res.render("dashboard", { blogPosts });
   } catch (err) {
     console.error(err);
     res.status(500).json(err);
   }
+});
+
+router.get("/dashboard/new", withAuth, async (_, res) => {
+  res.render("create-blogpost");
 });
 
 /**
@@ -70,7 +76,7 @@ router.get("/blogposts/:id", withAuth, async (req, res) => {
         includeUsername,
         {
           model: Comment,
-          attributes: ["contents", "created_at"],
+          attributes: ["contents", "createdAt"],
           include: [includeUsername],
         },
       ],
@@ -82,7 +88,7 @@ router.get("/blogposts/:id", withAuth, async (req, res) => {
   }
 });
 
-// Render the login page or redirect to the dashboard if already logged in
+// Render the login page or redirect to the homepage if already logged in
 router.get("/login", (req, res) => {
   req.session.loggedIn ? res.redirect("/") : res.render("login");
 });

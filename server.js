@@ -11,22 +11,22 @@ const helpers = require("./utils/helpers");
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-app.use(
-  session({
-    secret: "c8ce6600-3b0f-45d8-9abb-6511a44f3b0d",
-    cookie: {
-      maxAge: 60 * 60 * 1000,
-      httpOnly: true,
-      secure: false,
-      sameSite: "strict",
-    },
-    resave: false,
-    saveUninitialized: true,
-    store: new SequelizeStore({
-      db: sequelize,
-    }),
-  })
-);
+const sess = {
+  secret: "c8ce6600-3b0f-45d8-9abb-6511a44f3b0d",
+  cookie: {
+    maxAge: 60 * 60 * 1000,
+    httpOnly: true,
+    secure: false,
+    sameSite: "strict",
+  },
+  resave: false,
+  saveUninitialized: true,
+  store: new SequelizeStore({
+    db: sequelize,
+  }),
+};
+
+app.use(session(sess));
 
 const hbs = exphbs.create({ helpers });
 
