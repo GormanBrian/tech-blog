@@ -22,12 +22,14 @@
       {{/if}}
     </nav>
     <main>
-      <div class="gallery">
+      <div class="">
         {{{body}}}
       </div>
     </main>
     {{#if loggedIn}}
       <script src="/js/logout.js"></script>
+    {{else}}
+      <script src="/js/login.js"></script>
     {{/if}}
   </body>
 

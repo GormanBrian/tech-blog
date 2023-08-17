@@ -11,7 +11,9 @@ const loginFormHandler = async (event) => {
       headers: { "Content-Type": "application/json" },
     });
 
-    if (!response.ok) {
+    if (response.ok) {
+      document.location.replace("/");
+    } else {
       alert("Failed to log in.");
     }
   }
@@ -31,7 +33,9 @@ const signupFormHandler = async (event) => {
       headers: { "Content-Type": "application/json" },
     });
 
-    if (!response.ok) {
+    if (response.ok) {
+      alert("Sign up succeeded");
+    } else {
       alert("Failed to sign up.");
     }
   }

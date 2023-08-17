@@ -15,23 +15,23 @@ User.hasMany(BlogPost, {
 
 /* -------------------- Comment Associations -------------------- */
 
-// Comment belongs to a blog post
-Comment.belongsTo(BlogPost, {
-  foreignKey: "blog_post_id",
-});
-
-// Blog post has many comments
-BlogPost.hasMany(Comment, {
-  foreignKey: "blog_post_id",
-});
-
 Comment.belongsTo(User, {
   foreignKey: "author_id",
   onDelete: "CASCADE",
 });
 
+// Comment belongs to a blog post
+Comment.belongsTo(BlogPost, {
+  foreignKey: "blog_post_id",
+});
+
 User.hasMany(Comment, {
   foreignKey: "author_id",
+});
+
+// Blog post has many comments
+BlogPost.hasMany(Comment, {
+  foreignKey: "blog_post_id",
 });
 
 module.exports = {
