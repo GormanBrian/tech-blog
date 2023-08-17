@@ -11,6 +11,8 @@ const helpers = require("./utils/helpers");
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+const hbs = exphbs.create({ helpers });
+
 const sess = {
   secret: "c8ce6600-3b0f-45d8-9abb-6511a44f3b0d",
   cookie: {
@@ -26,16 +28,22 @@ const sess = {
   }),
 };
 
-app.use(session(sess));
-
-const hbs = exphbs.create({ helpers });
-
 app.engine("handlebars", hbs.engine);
 app.set("view engine", "handlebars");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
+
+app.use(session(sess));
+
+app.use(function (_, res, next) {
+  res.set(
+    "Cache-Control",
+    "no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0"
+  );
+  next();
+});
 
 app.use(routes);
 

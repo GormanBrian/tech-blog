@@ -17,11 +17,13 @@ router.get("/", withAuth, async (req, res) => {
   try {
     const blogPostsData = await BlogPost.findAll({
       attributes: ["title", "createdAt"],
+      raw: true,
     });
 
-    const blogPosts = blogPostsData.map((post) => post.get({ plain: true }));
-
-    res.render("homepage", { blogPosts });
+    res.render("homepage", {
+      blogPosts: blogPostsData,
+      loggedIn: req.session.logged_in,
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json(err);
@@ -33,11 +35,13 @@ router.get("/dashboard", withAuth, async (_, res) => {
   try {
     const blogPostsData = await BlogPost.findAll({
       attributes: ["title", "createdAt", "content"],
+      raw: true,
     });
 
-    const blogPosts = blogPostsData.map((post) => post.get({ plain: true }));
-
-    res.render("dashboard", { blogPosts });
+    res.render("dashboard", {
+      blogPosts: blogPostsData,
+      loggedIn: req.session.logged_in,
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json(err);
@@ -70,7 +74,7 @@ const includeUsername = {
 // Render the blogpost view with a BlogPost found by ID
 router.get("/blogposts/:id", withAuth, async (req, res) => {
   try {
-    const blogPost = await BlogPost.findByPk(req.params.id, {
+    const blogPostData = await BlogPost.findByPk(req.params.id, {
       attributes,
       include: [
         includeUsername,
@@ -81,7 +85,10 @@ router.get("/blogposts/:id", withAuth, async (req, res) => {
         },
       ],
     }).get({ plain: true });
-    res.render("blogpost", { blogPost });
+    res.render("blogpost", {
+      blogPost: blogPostData,
+      loggedIn: req.session.logged_in,
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json(err);
@@ -90,7 +97,7 @@ router.get("/blogposts/:id", withAuth, async (req, res) => {
 
 // Render the login page or redirect to the homepage if already logged in
 router.get("/login", (req, res) => {
-  req.session.loggedIn ? res.redirect("/") : res.render("login");
+  req.session.logged_in ? res.redirect("/") : res.render("login");
 });
 
 module.exports = router;
