@@ -31,7 +31,7 @@ router.get("/", withAuth, async (req, res) => {
 });
 
 // Render the dashboard view with all BlogPost titles and timestamps
-router.get("/dashboard", withAuth, async (_, res) => {
+router.get("/dashboard", withAuth, async (req, res) => {
   try {
     const blogPostsData = await BlogPost.findAll({
       attributes: ["title", "createdAt", "content"],
@@ -44,12 +44,12 @@ router.get("/dashboard", withAuth, async (_, res) => {
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json(err);
+    res.render("error", { err });
   }
 });
 
-router.get("/dashboard/new", withAuth, async (_, res) => {
-  res.render("create-blogpost");
+router.get("/dashboard/new", withAuth, async (req, res) => {
+  res.render("create-blogpost", { loggedIn: req.session.logged_in });
 });
 
 /**

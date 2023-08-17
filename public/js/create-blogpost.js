@@ -2,7 +2,7 @@ const createPostHandler = async (event) => {
   event.preventDefault();
 
   const title = document.querySelector("#blogpost-title").value.trim();
-  const content = document.querySelector("#blogpost-title").value.trim();
+  const content = document.querySelector("#blogpost-content").value.trim();
 
   if (title && content) {
     const response = await fetch("/api/blogposts/", {

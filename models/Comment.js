@@ -12,7 +12,7 @@ Comment.init(
       allowNull: false,
       primaryKey: true,
     },
-    contents: {
+    content: {
       type: DataTypes.STRING,
       allowNull: false,
     },
